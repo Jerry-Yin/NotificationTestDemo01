@@ -21,12 +21,13 @@
 
         <activity
             android:name=".ResultActivity">
+            android:parentActivityName=".MainActivity">
             <!--android:taskAffinity="FLAG_ACTIVITY_NEW_TASK"-->
-            android:excludeFromRecents="true">      <!-- 将新任务从最近列表中排除，目的是为了防止用户不小心返回到它。-->
-            <!--android:parentActivityName=".MainActivity">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".MainActivity"/>-->
+            <!--android:excludeFromRecents="true">      &lt;!&ndash; 将新任务从最近列表中排除，目的是为了防止用户不小心返回到它。&ndash;&gt;-->
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
 
         </activity>
     </application>

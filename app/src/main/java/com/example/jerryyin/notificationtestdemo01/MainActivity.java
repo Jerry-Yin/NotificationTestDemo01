@@ -19,7 +19,7 @@ public class MainActivity extends ActionBarActivity {
     private static final String ACTION_DISMISS = "DISMISS";
     private static final String ACTION_SNOOZE = "SNOOZE";
     private String msg = "闹钟时间到啦，懒虫起床啦！";
-    private final static int notifyID = 001;
+    public final static int notifyID = 001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,9 @@ public class MainActivity extends ActionBarActivity {
 
 //        setupDeterminateProgressNotifiction();  //固定进度条通知
 
-        setupInDtProgressNotifiction();         //不固定的(持续的)进度条通知
+//        setupInDtProgressNotifiction();         //不固定的(持续的)进度条通知
+
+//        setupNormalNotifiction();                   //普通通知
     }
 
     /** normal notification */
@@ -48,7 +50,10 @@ public class MainActivity extends ActionBarActivity {
                 // Because clicking the notification opens a new ("special") activity, there's
                 // no need to create an artificial back stack.
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //设置Activity在一个新的空的任务中启动
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);    //LAG_ONE_SHOT：得到的pi只能使用一次，第二次使用该pi时报错
+                                                                                                                                    //FLAG_NO_CREATE： 当pi不存在时，不创建，返回null
+                                                                                                                                    //FLAG_CANCEL_CURRENT： 每次都创建一个新的pi
+                                                                                                                                    //FLAG_UPDATE_CURRENT： 不存在时就创建，创建好了以后就一直用它，每次使用时都会更新pi的数据(使用较多)
 
         /** 3. when click the notification */
         mBuilder.setContentIntent(resultPendingIntent);
@@ -164,4 +169,15 @@ public class MainActivity extends ActionBarActivity {
         mNotifyMgr.notify(notifyID, mBuilder.build());
     }
 
+
+
+    //通过普通版本的Notification建立的notification
+    public void setupNormalNotifiction(){
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Notification notification = new Notification(R.drawable.db1, "This is ticker text", System.currentTimeMillis());
+        Intent intent = new Intent(this, ResultActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        notification.setLatestEventInfo(this, "This is content title", "This is content text", pi);
+        manager.notify(1, notification);
+    }
 }
